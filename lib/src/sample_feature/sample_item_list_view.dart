@@ -7,12 +7,10 @@ import 'sample_item_details_view.dart';
 
 class ListBloc {
   final RealmResults<SampleItem> items;
-  final Realm _realm;
+
   ListBloc(this.items);
 
-  void addNewItem() {
-    _realm.write(() => _realm.add<SampleItem>(ListBloc(items)));
-  }
+  void addNewItem() {}
 }
 
 class SampleItemListView extends StatelessWidget {
@@ -28,6 +26,7 @@ class SampleItemListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Sample Items'),
         actions: [
           IconButton(
@@ -41,25 +40,13 @@ class SampleItemListView extends StatelessWidget {
           ),
         ],
       ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: bloc.addNewItem,
-        child: const Icon(Icons.add),
-      ),
-
-      // To work with lists that may contain a large number of items, it’s best
-      // to use the ListView.builder constructor.
-      //
-      // In contrast to the default ListView constructor, which requires
-      // building all Widgets up front, the ListView.builder constructor lazily
-      // builds Widgets as they’re scrolled into view.
       body: ListView.builder(
         // Providing a restorationId allows the ListView to restore the
         // scroll position when a user leaves and returns to the app after it
         // has been killed while running in the background.
         restorationId: 'sampleItemListView',
         itemCount: bloc.items.length,
-        itemBuilder: (BuildContext context, int index) {
+        itemBuilder: (context, int index) {
           final item = bloc.items[index];
 
           return ListTile(
@@ -78,6 +65,10 @@ class SampleItemListView extends StatelessWidget {
                 );
               });
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: bloc.addNewItem,
+        child: const Icon(Icons.add),
       ),
     );
   }
